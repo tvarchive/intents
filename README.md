@@ -1,5 +1,6 @@
 # INTENT
-An Intent is a small reusable action, similar to a scenario. However it has no purpose, if it isn't used in a context. 
+An Intent is a small reusable action, similar to a scenario. However, it has no purpose, if it isn't used in a context. 
+<br>
 Eg:
      
           @Intent
@@ -53,7 +54,7 @@ If the step definitions are created in a package apart form the standard steps p
         
         
 ## Suggested Usage :
-* Intents are like the helper methods, thought they look like Scenarios, it is adviced that they are not run as a scenario.
+* Intents are like the helper methods, though they look like Scenarios, it is adviced that they are not run as a scenario.
 * Choose any convenient tagname for Intents and ignore them while running Cucumber Features using `~`.
     
    Eg: In cucumber command line options pass
