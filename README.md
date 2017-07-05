@@ -54,7 +54,7 @@ If the step definitions are created in a package apart form the standard steps p
         
         
 ## Suggested Usage :
-* Intents are like the helper methods, though they look like Scenarios, it is adviced that they are not run as a scenario.
+* Intents are like the helper methods, though they look like Scenarios, it is adviced that they aren't executed as a scenario.
 * Choose any convenient tagname for Intents and ignore them while running Cucumber Features using `~`.
     
    Eg: In cucumber command line options pass
