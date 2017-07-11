@@ -45,7 +45,7 @@ signing {
 
 group = "com.testvagrant.intents"
 archivesBaseName = "intents"
-version = "1.0.0"
+version = "1.0.1"
 
 uploadArchives {
     repositories {
