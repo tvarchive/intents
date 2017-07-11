@@ -50,7 +50,7 @@ public class MethodExecutor {
     }
 
     public void exec(String name) throws NoMatchingStepFoundException {
-        findPatterns().ifNotFound();
+        findPatterns();
         String pattern = findMatchingPattern(name);
         Method method = patterns.get(pattern);
         List<String> args = getData();
@@ -68,7 +68,6 @@ public class MethodExecutor {
     }
 
     private synchronized MethodExecutor findPatterns() {
-        if(!patternFound) {
             reflections = new Reflections(getPackageName(), new MethodAnnotationsScanner());
             Set<Method> allCucumberMethods = getAnnotatedMethods();
             allCucumberMethods.forEach(method -> {
@@ -76,7 +75,6 @@ public class MethodExecutor {
                     readPattern(method, annotation);
                 });
             });
-        }
         return this;
     }
 
