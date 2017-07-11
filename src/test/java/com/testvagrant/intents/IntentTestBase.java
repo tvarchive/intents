@@ -17,6 +17,14 @@ public class IntentTestBase {
     private static final String INVALID_INTENTID = "Invalid Intent ID";
 
     protected List<Feature> getFeatures() {
+        Feature feature = getFeature();
+        List<Feature> featuresList = new ArrayList<>();
+        featuresList.add(feature);
+        return featuresList;
+    }
+
+
+    protected Feature getFeature() {
         Feature feature = new Feature();
         feature.setElements(getElements());
         feature.setKeyword("Feature");
@@ -25,17 +33,14 @@ public class IntentTestBase {
         feature.setId("hello-world");
         feature.setDescription("This is a helloworld");
         feature.setUri("/Users/krishnanand/Development/TestVagrant/optimus-eco-system/StepDefs/src/test/resources/features/A.feature");
-        List<Feature> featuresList = new ArrayList<>();
-        featuresList.add(feature);
-        return featuresList;
+        return feature;
     }
-
 
     private List<Elements> getElements() {
         Elements elements = new Elements();
         elements.setName(VALID_INTENTID);
         elements.setLine(1);
-        elements.setId("Element Id");
+        elements.setId("element-id");
         elements.setDescription("This is element description");
         elements.setKeyword("Scenario");
         elements.setType("scenario");

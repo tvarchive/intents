@@ -36,6 +36,7 @@ public class MethodExecutor {
         patterns = new HashMap<>();
         dataTable = Optional.empty();
         overRideData = new ArrayList<>();
+        findPatterns();
     }
 
     public void setDataTable(Optional<DataTable> dataTable) {
@@ -50,9 +51,7 @@ public class MethodExecutor {
     }
 
     public void exec(String name) throws NoMatchingStepFoundException {
-        findPatterns();
-        String pattern = findMatchingPattern(name);
-        Method method = patterns.get(pattern);
+        Method method = getMethod(name);
         List<String> args = getData();
         try {
             if(method.getParameterCount()>0) {
@@ -68,6 +67,7 @@ public class MethodExecutor {
     }
 
     private synchronized MethodExecutor findPatterns() {
+        if(patterns.size()==0) {
             reflections = new Reflections(getPackageName(), new MethodAnnotationsScanner());
             Set<Method> allCucumberMethods = getAnnotatedMethods();
             allCucumberMethods.forEach(method -> {
@@ -75,6 +75,7 @@ public class MethodExecutor {
                     readPattern(method, annotation);
                 });
             });
+        }
         return this;
     }
 
@@ -109,6 +110,12 @@ public class MethodExecutor {
     }
 
 
+    private Method getMethod(String name) throws NoMatchingStepFoundException {
+        String pattern = findMatchingPattern(name);
+        Method method = patterns.get(pattern);
+        return method;
+    }
+
     private String findMatchingPattern(String name) throws NoMatchingStepFoundException {
         Optional<String> first = patterns.keySet().stream().filter(pattern -> {
             Pattern pattern1 = Pattern.compile(pattern);
@@ -126,19 +133,19 @@ public class MethodExecutor {
     private List<String> getData() {
         List<String> args = new ArrayList<>();
         if(dataTable.isPresent()) {
-            int matches = matcher.groupCount() - 1;
-            if(matches>0) {
-                for (int index = 0; index <= matches; index++) {
-                    args.add(overRideData.get(index));
-                }
-                for (int index = 0; index <= matches; index++) {
-                    overRideData.remove(0);
-                }
-            }
-        } else {
             for (int groupIndex = 1; groupIndex <= matcher.groupCount(); groupIndex++) {
                 args.add(matcher.group(groupIndex));
             }
+        } else {
+                int matches = matcher.groupCount() - 1;
+                if(matches>0) {
+                    for (int index = 0; index <= matches; index++) {
+                        args.add(overRideData.get(index));
+                    }
+                    for (int index = 0; index <= matches; index++) {
+                        overRideData.remove(0);
+                    }
+                }
         }
         return args;
     }

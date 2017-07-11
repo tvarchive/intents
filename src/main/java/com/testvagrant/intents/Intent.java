@@ -7,11 +7,12 @@ import com.testvagrant.intents.core.Seeker;
 import com.testvagrant.intents.core.SeekerImpl;
 import com.testvagrant.intents.entities.Elements;
 import com.testvagrant.intents.entities.Feature;
-import com.testvagrant.intents.exceptions.FeatureNotFoundException;
+import com.testvagrant.intents.exceptions.IntentException;
 import com.testvagrant.intents.exceptions.NoMatchingStepFoundException;
 import com.testvagrant.intents.utils.FeatureFinder;
 import cucumber.api.DataTable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,15 +94,17 @@ public class Intent {
     private String intentId;
     private Optional<DataTable> dataTable;
     private Optional<String> stepDefinitionPackage;
+    private static List<Feature> features = new ArrayList<>();
 
-    private Intent(String intentId) {
-        this.intentId = intentId;
-         dataTable = Optional.empty();
+    public Intent() {
+        dataTable = Optional.empty();
         stepDefinitionPackage = Optional.empty();
+        findFeatures();
+
     }
 
-    public static Intent intentRunner(String intentId) {
-        return new Intent(intentId);
+    public Intent(String stepDefsPackage){
+        stepDefinitionPackage = Optional.of(stepDefsPackage);
     }
 
     public Intent useDatatable(DataTable datatable) {
@@ -114,8 +117,7 @@ public class Intent {
         return this;
     }
 
-    public void run() throws FeatureNotFoundException {
-        List<Feature> features = new FeatureFinder().findFeatures();
+    public void run(String intentId) throws IntentException {
         Seeker seeker = new SeekerImpl(intentId);
         Feature feature = seeker.seekFeature(features);
         Elements elements = seeker.seekScenario(feature);
@@ -131,5 +133,12 @@ public class Intent {
                 System.exit(0);
             }
         });
+    }
+
+
+    private void findFeatures() {
+        if(features.size()==0) {
+            features = new FeatureFinder().findFeatures();
+        }
     }
 }
