@@ -5,7 +5,6 @@ import com.testvagrant.intents.Intent;
 import com.testvagrant.intents.exceptions.NoMatchingStepFoundException;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.*;
-import cucumber.runtime.Utils;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 
@@ -56,10 +55,10 @@ public class MethodExecutor {
         List<String> args = getData();
         try {
             if(method.getParameterCount()>0) {
-                Utils.invoke(method.getDeclaringClass().newInstance(), method, 200, args.toArray());
+                method.invoke(method.getDeclaringClass().newInstance(),args.toArray());
             }
             else {
-                Utils.invoke(method.getDeclaringClass().newInstance(), method, 200);
+                method.invoke(method.getDeclaringClass().newInstance(),args.toArray());
             }
         } catch (Throwable throwable) {
             throwable.printStackTrace();
