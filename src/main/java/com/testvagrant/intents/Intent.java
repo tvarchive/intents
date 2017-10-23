@@ -5,12 +5,11 @@ import com.testvagrant.intents.builders.MethodExecutorBuilder;
 import com.testvagrant.intents.core.MethodExecutor;
 import com.testvagrant.intents.core.Seeker;
 import com.testvagrant.intents.core.SeekerImpl;
-import com.testvagrant.intents.entities.Elements;
-import com.testvagrant.intents.entities.Feature;
 import com.testvagrant.intents.exceptions.IntentException;
 import com.testvagrant.intents.exceptions.NoMatchingStepFoundException;
 import com.testvagrant.intents.utils.FeatureFinder;
 import cucumber.api.DataTable;
+import gherkin.ast.ScenarioDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,11 +93,13 @@ public class Intent {
     private String intentId;
     private Optional<DataTable> dataTable;
     private Optional<String> stepDefinitionPackage;
-    private static List<Feature> features = new ArrayList<>();
+    private static List<gherkin.ast.Feature> features = new ArrayList<>();
+    private Optional<String> jarStepDefinitionPackage;
 
     public Intent() {
         dataTable = Optional.empty();
         stepDefinitionPackage = Optional.empty();
+        jarStepDefinitionPackage = Optional.empty();
         findFeatures();
 
     }
@@ -117,17 +118,24 @@ public class Intent {
         return this;
     }
 
+    public Intent locateJarStepDefinitionsAt(String packageName) {
+        jarStepDefinitionPackage = Optional.of(packageName);
+        return this;
+    }
+
     public void run(String intentId) throws IntentException {
         Seeker seeker = new SeekerImpl(intentId);
-        Feature feature = seeker.seekFeature(features);
-        Elements elements = seeker.seekScenario(feature);
+        gherkin.ast.Feature feature = seeker.seekFeature(features);
+        ScenarioDefinition elements = seeker.seekScenario(feature);
         MethodExecutor executor = new MethodExecutorBuilder()
                 .withDataTable(dataTable)
+                .withJarStepDefinitionPackageName(jarStepDefinitionPackage)
                 .withStepDefinationPackageName(stepDefinitionPackage)
                 .build();
+        executor.findPatterns();
         elements.getSteps().forEach(step -> {
             try {
-                executor.exec(step.getName());
+                executor.exec(step.getText());
             } catch (NoMatchingStepFoundException e) {
                 e.printStackTrace();
                 System.exit(0);

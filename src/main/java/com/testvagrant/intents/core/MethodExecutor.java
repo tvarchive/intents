@@ -30,13 +30,14 @@ public class MethodExecutor {
     private Optional<DataTable> dataTable;
     private static List<String> overRideData;
     private Optional<String> packageName;
+    private Optional<String> optionalStepDefinitionPackage;
 
     public MethodExecutor() {
         patterns = new HashMap<>();
         dataTable = Optional.empty();
         overRideData = new ArrayList<>();
         packageName = Optional.empty();
-        findPatterns();
+        optionalStepDefinitionPackage = Optional.empty();
     }
 
     public void setDataTable(Optional<DataTable> dataTable) {
@@ -50,12 +51,20 @@ public class MethodExecutor {
         this.packageName = packageName;
     }
 
+    public void setOptionalStepDefinitionPackage(Optional<String> optionalStepDefinitionPackage) {
+        this.optionalStepDefinitionPackage = optionalStepDefinitionPackage;
+    }
+
     public void exec(String name) throws NoMatchingStepFoundException {
         Method method = getMethod(name);
         List<String> args = getData();
         try {
             if(method.getParameterCount()>0) {
-                method.invoke(method.getDeclaringClass().newInstance(),args.toArray());
+                try {
+                    method.invoke(method.getDeclaringClass().newInstance(), args.toArray());
+                } catch (Exception e) {
+                    method.invoke(method.getDeclaringClass().newInstance(), args);
+                }
             }
             else {
                 method.invoke(method.getDeclaringClass().newInstance(),args.toArray());
@@ -66,13 +75,16 @@ public class MethodExecutor {
         }
     }
 
-    private synchronized MethodExecutor findPatterns() {
+    public synchronized MethodExecutor findPatterns() {
         if(patterns.size()==0) {
-            reflections = new Reflections(getPackageName(), new MethodAnnotationsScanner());
-            Set<Method> allCucumberMethods = getAnnotatedMethods();
-            allCucumberMethods.forEach(method -> {
-                Arrays.stream(method.getDeclaredAnnotations()).forEach(annotation -> {
-                    readPattern(method, annotation);
+            Set<String> packageNames = getPackageNames();
+            packageNames.forEach(packageName -> {
+                reflections = new Reflections(packageName, new MethodAnnotationsScanner());
+                Set<Method> allCucumberMethods = getAnnotatedMethods();
+                allCucumberMethods.forEach(method -> {
+                    Arrays.stream(method.getDeclaredAnnotations()).forEach(annotation -> {
+                        readPattern(method, annotation);
+                    });
                 });
             });
         }
@@ -150,7 +162,15 @@ public class MethodExecutor {
         return args;
     }
 
+
     private String getPackageName() {
        return packageName.orElse("steps");
+    }
+
+    private Set<String> getPackageNames() {
+        Set<String> packageNames = new HashSet<>();
+        packageNames.add(packageName.orElse("steps"));
+        packageNames.add(optionalStepDefinitionPackage.orElse("steps"));
+        return packageNames;
     }
 }

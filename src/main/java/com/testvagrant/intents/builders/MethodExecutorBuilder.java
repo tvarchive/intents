@@ -26,6 +26,11 @@ public class MethodExecutorBuilder {
         return this;
     }
 
+    public MethodExecutorBuilder withJarStepDefinitionPackageName(Optional<String> packageName) {
+        methodExecutor.setOptionalStepDefinitionPackage(packageName);
+        return this;
+    }
+
     public MethodExecutor build() {
         return methodExecutor;
     }

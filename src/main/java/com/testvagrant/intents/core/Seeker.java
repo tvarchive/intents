@@ -1,17 +1,16 @@
 package com.testvagrant.intents.core;
 
 
-import com.testvagrant.intents.entities.Elements;
-import com.testvagrant.intents.entities.Feature;
 import com.testvagrant.intents.exceptions.FeatureNotFoundException;
 import com.testvagrant.intents.exceptions.IntentNotFoundException;
+import gherkin.ast.ScenarioDefinition;
 
 import java.util.List;
 
 public interface Seeker {
 
-    Feature seekFeature(List<Feature> features) throws FeatureNotFoundException;
+    gherkin.ast.Feature seekFeature(List<gherkin.ast.Feature> features) throws FeatureNotFoundException;
 
-    Elements seekScenario(Feature feature) throws IntentNotFoundException;
+    ScenarioDefinition seekScenario(gherkin.ast.Feature feature) throws IntentNotFoundException;
 
 }

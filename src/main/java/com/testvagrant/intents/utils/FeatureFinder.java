@@ -1,14 +1,10 @@
 package com.testvagrant.intents.utils;
 
 
-import com.testvagrant.intents.entities.Feature;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.testvagrant.intents.utils.FileFinder.fileFinder;
 
 
 public class FeatureFinder {
@@ -23,12 +19,12 @@ public class FeatureFinder {
         this.path = path;
     }
 
-    public List<Feature> findFeatures() {
-        List<Feature> features = new ArrayList<>();
+    public List<gherkin.ast.Feature> findFeatures() {
+        List<gherkin.ast.Feature> features = new ArrayList<>();
         List<File> files = FileFinder.fileFinder(path).find(FileExtension.FEATURE);
         files.forEach(file -> {
             try {
-                Feature feature = GherkinToFeatureConverter.gherkinToFeatureConverter(file).convert();
+                gherkin.ast.Feature feature = GherkinToFeatureConverter.gherkinToFeatureConverter(file).convert();
                 features.add(feature);
             } catch (IOException e) {
                 e.printStackTrace();

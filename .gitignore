@@ -2,5 +2,5 @@ build
 .idea
 .gradle
 *.iml
-gradle.properties
+out/
 

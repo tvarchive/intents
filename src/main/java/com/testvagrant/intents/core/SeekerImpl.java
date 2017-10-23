@@ -1,10 +1,9 @@
 package com.testvagrant.intents.core;
 
 
-import com.testvagrant.intents.entities.Elements;
-import com.testvagrant.intents.entities.Feature;
 import com.testvagrant.intents.exceptions.FeatureNotFoundException;
 import com.testvagrant.intents.exceptions.IntentNotFoundException;
+import gherkin.ast.ScenarioDefinition;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +21,10 @@ public class SeekerImpl implements Seeker{
     }
 
     @Override
-    public Feature seekFeature(List<Feature> features) throws FeatureNotFoundException {
-        List<Feature> validFeatures = checkNotNull(features, "Features can't be null. It should be a valid list of features.");
-        Stream<Feature> featureStream = validFeatures.stream();
-        Optional<Feature> matchedFeature = featureStream.filter(feature -> feature.getElements().stream().filter(findMatchingScenario(intentId)).findFirst().isPresent()).findFirst();
+    public gherkin.ast.Feature seekFeature(List<gherkin.ast.Feature> features) throws FeatureNotFoundException {
+        List<gherkin.ast.Feature> validFeatures = checkNotNull(features, "Features can't be null. It should be a valid list of features.");
+        Stream<gherkin.ast.Feature> featureStream = validFeatures.stream();
+        Optional<gherkin.ast.Feature> matchedFeature = featureStream.filter(feature -> feature.getChildren().stream().filter(findMatchingScenario(intentId)).findFirst().isPresent()).findFirst();
         if(matchedFeature.isPresent()) {
             return matchedFeature.get();
         }
@@ -33,9 +32,9 @@ public class SeekerImpl implements Seeker{
     }
 
     @Override
-    public Elements seekScenario(Feature feature) throws IntentNotFoundException {
-        Feature validFeature = checkNotNull(feature,"Feature can't be null. It should be a valid feature object.");
-        Optional<Elements> elements = validFeature.getElements().stream().filter(findMatchingScenario(intentId)).findFirst();
+    public ScenarioDefinition seekScenario(gherkin.ast.Feature feature) throws IntentNotFoundException {
+        gherkin.ast.Feature validFeature = checkNotNull(feature,"Feature can't be null. It should be a valid feature object.");
+        Optional<ScenarioDefinition> elements = validFeature.getChildren().stream().filter(findMatchingScenario(intentId)).findFirst();
         if(elements.isPresent()) {
             return elements.get();
         }
