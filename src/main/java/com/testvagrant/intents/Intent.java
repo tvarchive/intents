@@ -75,7 +75,7 @@ import java.util.Optional;
  *     </code>
  * </pre>
  * <br>
- * If the step definitions are created in a package apart form the standard <b>steps</b> package, you can let Intent know about it as below.
+ * If the step definitions are created in a package apart form the standard <b>com.testvagrant.intents.steps</b> package, you can let Intent know about it as below.
  * <pre>
  *     <code>
  *         String intentId = "Login";

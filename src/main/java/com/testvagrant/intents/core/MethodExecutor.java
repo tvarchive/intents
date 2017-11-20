@@ -28,23 +28,18 @@ public class MethodExecutor {
     private Reflections reflections;
     private Matcher matcher;
     private Optional<DataTable> dataTable;
-    private static List<String> overRideData;
     private Optional<String> packageName;
     private Optional<String> optionalStepDefinitionPackage;
 
     public MethodExecutor() {
         patterns = new HashMap<>();
         dataTable = Optional.empty();
-        overRideData = new ArrayList<>();
         packageName = Optional.empty();
         optionalStepDefinitionPackage = Optional.empty();
     }
 
     public void setDataTable(Optional<DataTable> dataTable) {
         this.dataTable = dataTable;
-        if(dataTable.isPresent()) {
-            overRideData.addAll(dataTable.get().cells(0).get(0));
-        }
     }
 
     public void setPackageName(Optional<String> packageName) {
@@ -145,15 +140,14 @@ public class MethodExecutor {
     private List<String> getData() {
         List<String> args = new ArrayList<>();
         if(dataTable.isPresent()) {
-            int matches = matcher.groupCount() - 1;
-            if(matches>0) {
-                for (int index = 0; index <= matches; index++) {
-                    args.add(overRideData.get(index));
+            Map<String, String> datatableMap = dataTable.get().asMaps(String.class, String.class).get(0);
+                for (int index = 1; index <= matcher.groupCount(); index++) {
+                    if(datatableMap.containsKey(matcher.group(index))) {
+                        args.add(datatableMap.get(matcher.group(index)));
+                    } else {
+                        args.add(matcher.group(index));
+                    }
                 }
-                for (int index = 0; index <= matches; index++) {
-                    overRideData.remove(0);
-                }
-            }
         } else {
             for (int groupIndex = 1; groupIndex <= matcher.groupCount(); groupIndex++) {
                 args.add(matcher.group(groupIndex));

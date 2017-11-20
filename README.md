@@ -1,6 +1,9 @@
 # INTENT
 An Intent is a small reusable action, similar to a scenario. However, it has no purpose, if it isn't used in a context. 
 <br>
+
+<b>NOTE: Intents feature is not compatiable with Java8 step definitions</b>
+
 Eg:
      
           @Intent
@@ -43,7 +46,7 @@ If the default data is overridden, pass the datatable object to intent runner.
      
  
 
-If the step definitions are created in a package apart form the standard steps package, you can let Intent know about it as below.
+If the step definitions are created in a package apart form the standard com.testvagrant.intents.steps package, you can let Intent know about it as below.
      
          String intentId = "Login";
          String stepDefinitionsPackage = "com.example.exampleStepsPackage";
