@@ -66,7 +66,6 @@ public class MethodExecutor {
             }
         } catch (Throwable throwable) {
             throwable.printStackTrace();
-            System.exit(0);
         }
     }
 
