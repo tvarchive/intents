@@ -9,6 +9,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -50,22 +51,19 @@ public class MethodExecutor {
         this.optionalStepDefinitionPackage = optionalStepDefinitionPackage;
     }
 
-    public void exec(String name) throws NoMatchingStepFoundException {
+    public void exec(String name) throws NoMatchingStepFoundException, IllegalAccessException, InstantiationException, InvocationTargetException {
+        System.out.println("Executing step "+name);
         Method method = getMethod(name);
         List<String> args = getData();
         try {
             if(method.getParameterCount()>0) {
-                try {
-                    method.invoke(method.getDeclaringClass().newInstance(), args.toArray());
-                } catch (Exception e) {
-                    method.invoke(method.getDeclaringClass().newInstance(), args);
-                }
+                method.invoke(method.getDeclaringClass().newInstance(), args.toArray());
             }
             else {
-                method.invoke(method.getDeclaringClass().newInstance(),args.toArray());
+                method.invoke(method.getDeclaringClass().newInstance(),args);
             }
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
+            throw throwable;
         }
     }
 

@@ -10,7 +10,9 @@ import com.testvagrant.intents.exceptions.NoMatchingStepFoundException;
 import com.testvagrant.intents.utils.FeatureFinder;
 import cucumber.api.DataTable;
 import gherkin.ast.ScenarioDefinition;
+import gherkin.ast.Step;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -123,7 +125,7 @@ public class Intent {
         return this;
     }
 
-    public void run(String intentId) throws IntentException {
+    public void run(String intentId) throws IntentException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Seeker seeker = new SeekerImpl(intentId);
         gherkin.ast.Feature feature = seeker.seekFeature(features);
         ScenarioDefinition elements = seeker.seekScenario(feature);
@@ -133,14 +135,14 @@ public class Intent {
                 .withStepDefinationPackageName(stepDefinitionPackage)
                 .build();
         executor.findPatterns();
-        elements.getSteps().forEach(step -> {
+        for (Step step : elements.getSteps()) {
             try {
                 executor.exec(step.getText());
             } catch (NoMatchingStepFoundException e) {
                 e.printStackTrace();
                 System.exit(0);
             }
-        });
+        }
     }
 
 
