@@ -8,9 +8,9 @@ import com.testvagrant.intents.core.SeekerImpl;
 import com.testvagrant.intents.exceptions.IntentException;
 import com.testvagrant.intents.exceptions.NoMatchingStepFoundException;
 import com.testvagrant.intents.utils.FeatureFinder;
-import cucumber.api.DataTable;
 import gherkin.ast.ScenarioDefinition;
 import gherkin.ast.Step;
+import io.cucumber.datatable.DataTable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

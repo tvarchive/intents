@@ -1,7 +1,7 @@
 package com.testvagrant.intents.builders;
 
 import com.testvagrant.intents.core.MethodExecutor;
-import cucumber.api.DataTable;
+import io.cucumber.datatable.DataTable;
 
 import java.util.Optional;
 

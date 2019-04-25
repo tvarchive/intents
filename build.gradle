@@ -1,5 +1,5 @@
 group 'com.testvagrant.optimus'
-version '1.0-SNAPSHOT'
+version '2.0'
 
 apply plugin: 'java'
 apply plugin: 'groovy'
@@ -14,13 +14,11 @@ repositories {
     jcenter()
 }
 
-
-
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'com.google.guava', name: 'guava', version: '22.0'
     compile group: 'org.reflections', name: 'reflections', version: '0.9.11'
     testCompile "org.mockito:mockito-core:2.8.47"
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.1'
-    compile('com.testvagrant.optimus-commons:optimus-commons:2.2.1')
+    compile('com.testvagrant.optimus-commons:optimus-commons:3.0')
 }
