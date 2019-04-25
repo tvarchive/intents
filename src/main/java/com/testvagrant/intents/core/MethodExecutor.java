@@ -3,8 +3,8 @@ package com.testvagrant.intents.core;
 
 import com.testvagrant.intents.Intent;
 import com.testvagrant.intents.exceptions.NoMatchingStepFoundException;
-import cucumber.api.DataTable;
 import cucumber.api.java.en.*;
+import io.cucumber.datatable.DataTable;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 
@@ -137,10 +137,10 @@ public class MethodExecutor {
     private List<String> getData() {
         List<String> args = new ArrayList<>();
         if(dataTable.isPresent()) {
-            Map<String, String> datatableMap = dataTable.get().asMaps(String.class, String.class).get(0);
+            Map<Object, Object> datatableMap = dataTable.get().asMaps(String.class, String.class).get(0);
                 for (int index = 1; index <= matcher.groupCount(); index++) {
                     if(datatableMap.containsKey(matcher.group(index))) {
-                        args.add(datatableMap.get(matcher.group(index)));
+                        args.add(String.valueOf(datatableMap.get(matcher.group(index))));
                     } else {
                         args.add(matcher.group(index));
                     }
